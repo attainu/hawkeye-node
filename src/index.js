@@ -21,6 +21,7 @@ import bodyParser from 'body-parser';
 import indexRoute from './routes/index';
 import signupRoute from './routes/signup';
 import profileRoute from './routes/profile';
+import signupApiRoute from './routes/signupApi';
 
 const app = express();
 
@@ -40,6 +41,7 @@ const hostname = 'localhost';
 app.use('/',indexRoute);
 app.use('/signup',signupRoute);
 app.use('/profile',profileRoute);
+app.use('/api',signupApiRoute);
 
 app.listen(port,hostname, function(){
     console.log(`Server running at http://${hostname}:${port}/`);
