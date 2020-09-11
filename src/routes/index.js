@@ -1,8 +1,13 @@
 import express from 'express';
 import path from 'path';
+import City from '../models/City';
+
 const router = express.Router();
 
 router.get('/',function(request,response){
+    City.find(function(err,docs){
+        console.log(docs);
+    });
     response.render('home');
 });
 
