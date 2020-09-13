@@ -14,12 +14,13 @@
 
 //EXPRESS Framework Setup
 // var express = require('express');
-import  express from 'express';
+import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
-
+import session from 'express-session';
 
 import indexRoute from './routes/index';
+import loginRoute from './routes/login';
 import signupRoute from './routes/signup';
 import profileRoute from './routes/profile';
 import signupApiRoute from './routes/signupApi';
@@ -27,6 +28,16 @@ import signupApiRoute from './routes/signupApi';
 import './config/dbconfig';
 
 const app = express();
+
+const sessionConfig = {
+    secret: 'secret',
+    key: 'keyname',
+    resave: true,
+    saveUninitialized: false,
+    cookie: { maxAge: 60000 }
+};
+
+app.use(session(sessionConfig))
 
 app.set('views', path.join(__dirname, 'views'));
 
@@ -42,10 +53,10 @@ const port = 3001;
 const hostname = 'localhost';
 
 app.use('/',indexRoute);
+app.use('/login',loginRoute);
 app.use('/signup',signupRoute);
 app.use('/profile',profileRoute);
 app.use('/api',signupApiRoute);
-
 
 app.listen(port,hostname, function(){
     console.log(`Server running at http://${hostname}:${port}/`);

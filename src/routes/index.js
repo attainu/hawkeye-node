@@ -11,6 +11,11 @@ router.get('/',function(request,response){
     response.render('home');
 });
 
+router.get('/logout',function(request,response){
+    request.session.user = null;
+    response.redirect('/login');
+});
+
 router.get('/about',function(request,response){
     //This is only used for serving static files
     const filePath = path.join(__dirname,'../views','about.html');

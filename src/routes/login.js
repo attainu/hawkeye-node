@@ -6,7 +6,6 @@ import User from '../models/User';
 const upload = multer();
 const router = express.Router()
 
-
 router.get('/',function(req,res) {
     if(req.session.user) {
         return res.redirect('/profile');
@@ -14,43 +13,49 @@ router.get('/',function(req,res) {
     const initialData = {
         email: 'email@email.com',
         password: 'testest',
-        address: 'Address 1',
-        address2: 'Address 2',
-        city: 'Toronto',
-        zip: 'ABC',
         errors: {}
     }
-    res.render('signup',initialData);
+    res.render('login',initialData);
 });
 
 router.post(
     '/',
     upload.array(),
     [
-        // email must be an email
         body('email').isEmail().withMessage('Please enter a valid email.'),
-        // password must be at least 5 chars long
         body('password').isLength({ min: 5 }).withMessage('Password must have 5 characters.')
     ],
     function(req,res) {
         const errors = validationResult(req);
-        const data = {
+
+        let data = {
             ...req.body,
             errors: errors.mapped()
         }
 
         if(errors.isEmpty()) {
-            const user = new User(req.body);
-            user.save()
-            .then(()=>{
-                res.redirect('/login');
+            User.findOne({email:data.email},function(err,doc){
+                doc.comparePassword(data.password,function(er,isMatch){
+                    if(isMatch) {
+                        req.session.user = doc;
+                        return res.redirect('/profile');
+                    } else {
+                        data = {
+                            ...req.body,
+                            errors: {
+                                password:{
+                                    msg: 'Invalid email or Password'
+                                }
+                            }
+                        }
+                        res.render('login',data);
+                    }
+                })
             })
         } else {
-            res.render('signup',data);
+            res.render('login',data);
         }
     }
 );
-
-// module.exports = Router;
 
 export default router;

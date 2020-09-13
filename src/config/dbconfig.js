@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
 
-mongoose.connect('mongodb://localhost/hawkeye', {
+mongoose.connect('mongodb://localhost/hawkeye-node', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
   useCreateIndex: true
 })
 .then(()=>{
-    console.log('Connected To MongoDB');
+  console.log('Connected To MongoDB');
 })
 .catch(()=>{
-    console.log('Error Connecting To MongoDB');
+  console.log('Error Connecting To MongoDB');
 });
